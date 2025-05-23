@@ -26,11 +26,21 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
+    input::placeholder {
+      color: #aaa;
+    }
     .result {
       margin-top: 20px;
       background: #e7f5ff;
       padding: 15px;
       border-radius: 8px;
+    }
+    .copy-btn {
+      background: #007bff;
+      color: #fff;
+      margin-top: 10px;
+      border: none;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -38,15 +48,19 @@
   <div class="container">
     <h2>순수익 계산기</h2>
     <label>매입가 (원)</label>
-    <input type="number" id="cost" value="3200">
+    <input type="number" id="cost" placeholder="입력하세요" value="3200">
 
     <label>판매가 (원)</label>
-    <input type="number" id="price" value="13200">
+    <input type="number" id="price" placeholder="입력하세요" value="13200">
 
     <label>수량</label>
-    <input type="number" id="qty" value="100">
+    <input type="number" id="qty" placeholder="입력하세요" value="100">
+
+    <label>관세율 (%)</label>
+    <input type="number" id="dutyRate" value="8">
 
     <button onclick="calculate()">계산하기</button>
+    <button class="copy-btn" onclick="copyResult()">복사하기</button>
 
     <div class="result" id="result"></div>
   </div>
@@ -56,11 +70,14 @@
       const cost = parseFloat(document.getElementById('cost').value);
       const price = parseFloat(document.getElementById('price').value);
       const qty = parseInt(document.getElementById('qty').value);
+      const dutyRate = parseFloat(document.getElementById('dutyRate').value) / 100;
 
       const totalSales = price * qty;
-      const duty = totalSales * 0.08;
+      const duty = totalSales * dutyRate;
       const vat = (totalSales + duty) * 0.10;
-      const fees = 33000 + 25000;
+      const brokerFee = 33000;
+      const doFee = 25000;
+      const fees = brokerFee + doFee;
       const totalTaxAndFees = duty + vat + fees;
       const totalCost = cost * qty;
 
@@ -69,11 +86,32 @@
       const unitProfit = totalProfit / qty;
 
       document.getElementById('result').innerHTML = `
+        <div id="resultText">
         <strong>총매출:</strong> ${totalSales.toLocaleString()}원<br>
+        <strong>매입 총액:</strong> ${totalCost.toLocaleString()}원<br>
+        <strong>관세 (${(dutyRate * 100).toFixed(1)}%):</strong> ${duty.toLocaleString()}원<br>
+        <strong>부가세 (10%):</strong> ${vat.toLocaleString()}원<br>
+        <strong>관세사 수수료:</strong> ${brokerFee.toLocaleString()}원<br>
+        <strong>D/O 발행비:</strong> ${doFee.toLocaleString()}원<br>
         <strong>총비용:</strong> ${finalCost.toLocaleString()}원<br>
         <strong>총 순수익:</strong> ${totalProfit.toLocaleString()}원<br>
         <strong>개당 순수익:</strong> ${unitProfit.toLocaleString(undefined, { maximumFractionDigits: 0 })}원
+        </div>
       `;
+    }
+
+    function copyResult() {
+      const resultText = document.getElementById('resultText');
+      if (!resultText) return alert("먼저 계산을 해주세요.");
+
+      const tempElem = document.createElement('textarea');
+      tempElem.value = resultText.innerText;
+      document.body.appendChild(tempElem);
+      tempElem.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempElem);
+
+      alert("결과가 복사되었습니다!");
     }
   </script>
 </body>
