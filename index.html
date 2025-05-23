@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ko">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,17 +38,20 @@
   <div class="container">
     <h2>순수익 계산기</h2>
     <label>매입가 (원)</label>
-    <input type="number" id="cost" value="3200"><label>판매가 (원)</label>
-<input type="number" id="price" value="13200">
+    <input type="number" id="cost" value="3200">
 
-<label>수량</label>
-<input type="number" id="qty" value="100">
+    <label>판매가 (원)</label>
+    <input type="number" id="price" value="13200">
 
-<button onclick="calculate()">계산하기</button>
+    <label>수량</label>
+    <input type="number" id="qty" value="100">
 
-<div class="result" id="result"></div>
+    <button onclick="calculate()">계산하기</button>
 
-  </div>  <script>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
     function calculate() {
       const cost = parseFloat(document.getElementById('cost').value);
       const price = parseFloat(document.getElementById('price').value);
@@ -66,4 +70,11 @@
 
       document.getElementById('result').innerHTML = `
         <strong>총매출:</strong> ${totalSales.toLocaleString()}원<br>
-        <strong>총비
+        <strong>총비용:</strong> ${finalCost.toLocaleString()}원<br>
+        <strong>총 순수익:</strong> ${totalProfit.toLocaleString()}원<br>
+        <strong>개당 순수익:</strong> ${unitProfit.toLocaleString(undefined, { maximumFractionDigits: 0 })}원
+      `;
+    }
+  </script>
+</body>
+</html>
